@@ -1,0 +1,61 @@
+Evidence: _lakehouse/scratch/customers_tt/_delta_log/  (NB3 - time travel + MERGE + RESTORE)
+Lightweight path: identical on-disk Delta format Spark/Databricks would write.
+==============================================================================
+
+--- Commit index: one JSON per version, append-only = the transaction log ---
+  v0  00000000000000000000.json  1,338 B   operation = WRITE
+  v1  00000000000000000001.json  1,609 B   operation = WRITE
+  v2  00000000000000000002.json  1,493 B   operation = MERGE
+  v3  00000000000000000003.json    790 B   operation = WRITE
+  v4  00000000000000000004.json  1,065 B   operation = RESTORE
+
+==============================================================================
+--- Full contents of 00000000000000000004.json (the RESTORE commit) ---
+==============================================================================
+{
+  "commitInfo": {
+    "timestamp": 1787029994287,
+    "operation": "RESTORE",
+    "operationParameters": {
+      "version": "2"
+    },
+    "readVersion": 3,
+    "engineInfo": "delta-rs:py-1.6.2",
+    "clientVersion": "delta-rs.py-1.6.2",
+    "operationMetrics": {
+      "numRemovedFile": 1,
+      "numRestoredFile": 0
+    }
+  }
+}
+{
+  "protocol": {
+    "minReaderVersion": 1,
+    "minWriterVersion": 2
+  }
+}
+{
+  "remove": {
+    "path": "part-00000-44da0638-03e9-42d8-a58c-d6a9486002ee-c000.snappy.parquet",
+    "dataChange": true,
+    "deletionTimestamp": 1787029994287,
+    "extendedFileMetadata": true,
+    "partitionValues": {},
+    "size": 1570
+  }
+}
+{
+  "metaData": {
+    "id": "8f895ebb-af10-4255-b6dd-aae4ea7f317e",
+    "name": null,
+    "description": null,
+    "format": {
+      "provider": "parquet",
+      "options": {}
+    },
+    "schemaString": "{\"type\":\"struct\",\"fields\":[{\"name\":\"customer_id\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"status\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"score\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"tier\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}",
+    "partitionColumns": [],
+    "createdTime": 1787029993886,
+    "configuration": {}
+  }
+}
